@@ -11,7 +11,7 @@ public class Message {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "message_id")
-    private int messageId;
+    private Long messageId;
 
     @Column(name = "message")
     private String message;
@@ -25,7 +25,10 @@ public class Message {
     @Column(name = "editdate")
     private Date editdate;
 
-    public Message(int messageId, String message, int senderId, Date recdate, Date editdate) {
+    public Message() {
+    }
+
+    public Message(Long messageId, String message, int senderId, Date recdate, Date editdate) {
         this.messageId = messageId;
         this.message = message;
         this.senderId = senderId;
@@ -33,11 +36,11 @@ public class Message {
         this.editdate = editdate;
     }
 
-    public int getMessageId() {
+    public Long getMessageId() {
         return messageId;
     }
 
-    public void setMessageId(int messageId) {
+    public void setMessageId(Long messageId) {
         this.messageId = messageId;
     }
 
