@@ -1,4 +1,4 @@
-package ru.selever.simplemvc;
+package ru.selever;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
