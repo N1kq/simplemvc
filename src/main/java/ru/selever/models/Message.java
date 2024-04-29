@@ -3,7 +3,7 @@ package ru.selever.models;
 import jakarta.persistence.*;
 
 import java.sql.Date;
-
+//TODO: Добавить модель для получения данных снаружи, а эта должна расширять её
 @Entity
 @Table(name = "message_data")
 public class Message {
