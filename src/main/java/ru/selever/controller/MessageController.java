@@ -40,7 +40,7 @@ public class MessageController {
         logger.info("Пришел Get-запрос сообщения по id");
         return messageRepository.findById(messageId).orElseThrow(RuntimeException::new);
     }
-
+    //TODO: Разобраться с warning ResponseEntity
     //Create message
     @PostMapping
     public ResponseEntity createMessage(@RequestBody Message message) throws URISyntaxException{
