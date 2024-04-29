@@ -7,8 +7,8 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ScheduledLog {
-    private static final Logger logger = LoggerFactory.getLogger(ScheduledLog.class);
+public class TelegramScheduler {
+    private static final Logger logger = LoggerFactory.getLogger(TelegramScheduler.class);
     @Scheduled(cron = "0 * * * * ?", zone = "Europe/Moscow")
     public void SLog() {
         logger.info("Scheduled task complete");
