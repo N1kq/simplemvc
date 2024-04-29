@@ -1,6 +1,8 @@
 package ru.selever.controller;
 
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +17,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/messages")
 public class MessageController {
+    private static final Logger logger = LoggerFactory.getLogger(MessageController.class);
     @Autowired
     private final MessageRepository messageRepository;
     @Autowired
@@ -25,18 +28,24 @@ public class MessageController {
     //Get all
     @GetMapping
     public List<Message> getMessages() {
+        logger.debug("Пришел Get-запрос на все сообщения");
+        logger.info("Пришел Get-запрос на все сообщения");
         return messageRepository.findAll();
     }
 
     //Get by id
     @GetMapping("/{id}")
     public Message getMessage(@PathVariable Long messageId){
+        logger.debug("Пришел Get-запрос сообщения по id");
+        logger.info("Пришел Get-запрос сообщения по id");
         return messageRepository.findById(messageId).orElseThrow(RuntimeException::new);
     }
 
     //Create message
     @PostMapping
     public ResponseEntity createMessage(@RequestBody Message message) throws URISyntaxException{
+        logger.debug("Пришел Post-запрос на создание сообщения");
+        logger.info("Пришел Post-запрос на создание сообщения");
         Message savedMessage = messageRepository.save(message);
         return ResponseEntity.created(new URI("/messages/"+savedMessage.getMessageId())).body(savedMessage);
     }
@@ -44,6 +53,8 @@ public class MessageController {
     //Update message
     @PutMapping("/{id}")
     public ResponseEntity updateMessage(@PathVariable Long messageId, @RequestBody Message message){
+        logger.debug("Пришел Put-запрос на изменениие сообщения");
+        logger.info("Пришел Put-запрос на изменениие сообщения");
         Message currentMessage = messageRepository.findById(messageId).orElseThrow(RuntimeException::new);
         currentMessage.setMessage(message.getMessage());
         currentMessage.setEditdate(message.getEditdate());
@@ -57,35 +68,10 @@ public class MessageController {
     //Delete message
     @DeleteMapping("/{id}")
     public ResponseEntity deleteClient(@PathVariable Long messageId){
+        logger.debug("Пришел Delete-запрос на удаление сообщения");
+        logger.info("Пришел Delete-запрос на удаление сообщения");
         messageRepository.deleteById(messageId);
         return ResponseEntity.ok().build();
     }
-//    //POST
-//    @PostMapping("/add")
-//    public Message addMessage(@RequestBody Message message){
-//        return messageRepository.save(message);
-//    }
-//
-//    //GET ALL
-//    @GetMapping("/showall")
-//    public  Iterable<Message> showMessages(){
-//        return messageRepository.findAll();
-//    }
-//
-//    //GET BY ID
-//    @GetMapping("/{messageId}")
-//    public Optional<Message> messageById(@PathVariable("messageId") Long messageId){
-//        return messageRepository.findById(messageId);
-//    }
-//    //UPDATE
-//    @PutMapping("/update")
-//    public Message updMessage(@RequestBody Message message){
-//        return messageRepository.save(message);
-//    }
-//
-//    //DELETE
-//    @DeleteMapping("/{messageId}")
-//    public void delMessage(@PathVariable ("messageId") Long messageId){
-//        messageRepository.deleteById(messageId);
-//    }
+
 }
