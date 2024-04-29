@@ -1,5 +1,4 @@
-package ru.selever.controller;
-
+package ru.selever.controllers;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,7 +11,6 @@ import ru.selever.repository.MessageRepository;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
-
 
 @RestController
 @RequestMapping("/messages")

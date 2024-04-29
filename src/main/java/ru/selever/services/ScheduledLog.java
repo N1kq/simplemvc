@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 public class ScheduledLog {
     private static final Logger logger = LoggerFactory.getLogger(ScheduledLog.class);
     @Scheduled(cron = "0 * * * * ?", zone = "Europe/Moscow")
-    public void SLog() throws InterruptedException{
+    public void SLog() {
         logger.info("Scheduled task complete");
     }
 }
