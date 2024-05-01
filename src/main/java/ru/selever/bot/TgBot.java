@@ -8,17 +8,17 @@ import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.objects.Update;
 @Component
 public class TgBot extends TelegramLongPollingBot {
+    @Value("${spring.service.telegramscheduler.botname}")
+    private String botname;
 
     Logger logger = LoggerFactory.getLogger(TgBot.class);
     public TgBot(@Value("${spring.service.telegramscheduler.bottoken}") String botToken){
         super(botToken);
     }
+    @Override
     public String getBotUsername(){
         return botname;
     }
-    @Value("${spring.service.telegramscheduler.botname}")
-    private String botname;
-
     @Override
     public void onUpdateReceived(Update update){
         logger.info(String.valueOf(update));
