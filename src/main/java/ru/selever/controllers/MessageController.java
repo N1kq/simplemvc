@@ -57,7 +57,7 @@ public class MessageController {
         currentMessage.setMessage(message.getMessage());
         currentMessage.setEditdate(message.getEditdate());
         currentMessage.setRecdate(message.getRecdate());
-        currentMessage.setSenderId(message.getSenderId());
+        currentMessage.setUserId(message.getUserId());
         currentMessage = messageRepository.save(message);
 
         return ResponseEntity.ok(currentMessage);
