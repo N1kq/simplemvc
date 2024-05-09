@@ -25,8 +25,7 @@ public class Message {
     @Column(name = "editdate")
     private Date editdate;
 
-    public Message() {
-    }
+    public Message() {}
 
     public Message(Long messageId, String message, int userId, Date recdate, Date editdate) {
         this.messageId = messageId;
