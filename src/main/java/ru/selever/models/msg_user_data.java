@@ -27,8 +27,6 @@ public class msg_user_data extends Message{
 
     public msg_user_data(){}
 
-
-    @Override
     public Long getUserId() {
         return userId;
     }

@@ -16,8 +16,8 @@ public class Message {
     @Column(name = "message")
     private String message;
 
-    @Column(name = "user_id")
-    private int userId;
+    @Column(name = "sender_id")
+    private int senderId;
 
     @Column(name = "recdate")
     private Date recdate;
@@ -27,10 +27,10 @@ public class Message {
 
     public Message() {}
 
-    public Message(Long messageId, String message, int userId, Date recdate, Date editdate) {
+    public Message(Long messageId, String message, int senderId, Date recdate, Date editdate) {
         this.messageId = messageId;
         this.message = message;
-        this.userId = userId;
+        this.senderId = senderId;
         this.recdate = recdate;
         this.editdate = editdate;
     }
@@ -51,12 +51,12 @@ public class Message {
         this.message = message;
     }
 
-    public int getUserId() {
-        return userId;
+    public int getSenderId() {
+        return senderId;
     }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
+    public void setSenderId(int senderId) {
+        this.senderId = senderId;
     }
 
     public Date getRecdate() {
