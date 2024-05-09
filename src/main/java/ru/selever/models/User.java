@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name = "user_data")
-public class msg_user_data extends Message{
+public class User{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "user_id")
@@ -25,7 +25,16 @@ public class msg_user_data extends Message{
     @Column(name = "e-mail")
     private String eMail;
 
-    public msg_user_data(){}
+    public User(){}
+
+    public User(Long userId, String username, String name, String surname, String phoneNumber, String eMail) {
+        this.userId = userId;
+        this.username = username;
+        this.name = name;
+        this.surname = surname;
+        this.phoneNumber = phoneNumber;
+        this.eMail = eMail;
+    }
 
     public Long getUserId() {
         return userId;
