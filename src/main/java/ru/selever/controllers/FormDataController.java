@@ -12,7 +12,7 @@ import ru.selever.repository.DataRepository;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-@Controller
+
 @RestController
 @RequestMapping("/data")
 public class FormDataController {
@@ -33,15 +33,6 @@ public class FormDataController {
         Data savedData = dataRepository.save(data);
         return ResponseEntity.created(new URI("/data/"+ savedData.getMessageId())).body(savedData);
     }
-
-    //GET form
-
-    @GetMapping("/form")
-    public String getStyledPage(Model model) {
-        model.addAttribute("name", "Baeldung Reader");
-        return "styledPage";
-    }
-
 
 //    //GET ALL record
 //    @GetMapping
