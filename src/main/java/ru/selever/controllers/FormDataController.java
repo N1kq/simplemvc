@@ -4,13 +4,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.selever.models.Data;
 import ru.selever.repository.DataRepository;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-
+@Controller
 @RestController
 @RequestMapping("/data")
 public class FormDataController {
@@ -31,6 +33,15 @@ public class FormDataController {
         Data savedData = dataRepository.save(data);
         return ResponseEntity.created(new URI("/data/"+ savedData.getMessageId())).body(savedData);
     }
+
+    //GET form
+
+    @GetMapping("/form")
+    public String getStyledPage(Model model) {
+        model.addAttribute("name", "Baeldung Reader");
+        return "styledPage";
+    }
+
 
 //    //GET ALL record
 //    @GetMapping
