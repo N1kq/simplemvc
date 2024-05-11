@@ -31,32 +31,4 @@ public class FormDataController {
         Data savedData = dataRepository.save(data);
         return ResponseEntity.created(new URI("/data/"+ savedData.getMessageId())).body(savedData);
     }
-
-//    //GET ALL record
-//    @GetMapping
-//    public List<Data> getData(){
-//        logger.info("Пришел Get-запрос на все записи таблицы");
-//        return dataRepository.findAll();
-//    }
-//
-//    //PUT Update Data
-//    @PutMapping("/{id}")
-//    public ResponseEntity updateData(@PathVariable Long messageId, @RequestBody Data data){
-//        logger.debug("Пришел Put-запрос на изменениие записи");
-//        Data currentData = dataRepository.findById(messageId).orElseThrow(RuntimeException::new);
-//        currentData.setMessage(data.getMessage());
-//        currentData.setEditdate(data.getEditdate());
-//        currentData.setName(data.getName());
-//        currentData.seteMail(data.geteMail());
-//        currentData.setPhoneNumber(data.getPhoneNumber());
-//        return ResponseEntity.ok(currentData);
-//
-//    }
-//    //DELETE data
-//    @DeleteMapping("/{id}")
-//    public ResponseEntity deleteData(@PathVariable Long messageId){
-//        logger.debug("Пришел Delete-запрос на удаление записи");
-//        dataRepository.deleteById(messageId);
-//        return ResponseEntity.ok().build();
-//    }
 }
