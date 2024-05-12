@@ -25,16 +25,10 @@ public class User{
     @Column(name = "e-mail")
     private String eMail;
 
-    public User(){}
+    @Column(name = "role")
+    private String role;
 
-    public User(Long userId, String username, String name, String surname, String phoneNumber, String eMail) {
-        this.userId = userId;
-        this.username = username;
-        this.name = name;
-        this.surname = surname;
-        this.phoneNumber = phoneNumber;
-        this.eMail = eMail;
-    }
+    public User(){}
 
     public Long getUserId() {
         return userId;
@@ -82,5 +76,24 @@ public class User{
 
     public void seteMail(String eMail) {
         this.eMail = eMail;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    public User(Long userId, String username, String name, String surname, String phoneNumber, String eMail, String role) {
+        this.userId = userId;
+        this.username = username;
+        this.name = name;
+        this.surname = surname;
+        this.phoneNumber = phoneNumber;
+        this.eMail = eMail;
+        this.role = role;
+
     }
 }
