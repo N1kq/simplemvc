@@ -10,8 +10,8 @@ public class User{
     @Column(name = "user_id")
     private Long userId;
 
-    @Column(name = "username")
-    private String username;
+    @Column(name = "user_tgname")
+    private String userTgname;
 
     @Column(name = "name")
     private String name;
@@ -28,7 +28,25 @@ public class User{
     @Column(name = "role")
     private String role;
 
+    @Column(name = "chat_id")
+    private String chatId;
+
     public User(){}
+
+    public User(Long userId, String userTgname, String name,
+                String surname, String phoneNumber, String eMail, String role, String chatId) {
+        this.userId = userId;
+        this.userTgname = userTgname;
+        this.name = name;
+        this.surname = surname;
+        this.phoneNumber = phoneNumber;
+        this.eMail = eMail;
+        this.role = role;
+        this.chatId = chatId;
+    }
+
+    //Getters and Setters
+
 
     public Long getUserId() {
         return userId;
@@ -38,12 +56,12 @@ public class User{
         this.userId = userId;
     }
 
-    public String getUsername() {
-        return username;
+    public String getUserTgname() {
+        return userTgname;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setUserTgname(String userTgname) {
+        this.userTgname = userTgname;
     }
 
     public String getName() {
@@ -86,14 +104,11 @@ public class User{
         this.role = role;
     }
 
-    public User(Long userId, String username, String name, String surname, String phoneNumber, String eMail, String role) {
-        this.userId = userId;
-        this.username = username;
-        this.name = name;
-        this.surname = surname;
-        this.phoneNumber = phoneNumber;
-        this.eMail = eMail;
-        this.role = role;
+    public String getChatId() {
+        return chatId;
+    }
 
+    public void setChatId(String chatId) {
+        this.chatId = chatId;
     }
 }
