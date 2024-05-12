@@ -31,3 +31,8 @@ build/
 
 ### VS Code ###
 .vscode/
+/markdownfiles/.obsidian/app.json
+/markdownfiles/.obsidian/appearance.json
+/markdownfiles/.obsidian/core-plugins.json
+/markdownfiles/.obsidian/core-plugins-migration.json
+/markdownfiles/.obsidian/workspace.json
