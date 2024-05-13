@@ -12,7 +12,7 @@ public class TelegramScheduler {
     private static final Logger logger = LoggerFactory.getLogger(TelegramScheduler.class);
     @Scheduled(cron = "0 * * * * ?", zone = "Europe/Moscow")
     public void tgbot() {
-        logger.info("Scheduled task complete");
+        //logger.info("Scheduled task complete");
     }
 
 }

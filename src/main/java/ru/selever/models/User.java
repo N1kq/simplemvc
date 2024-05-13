@@ -26,7 +26,7 @@ public class User{
     private String eMail;
 
     @Column(name = "role")
-    private String role;
+    private Long role;
 
     @Column(name = "chat_id")
     private String chatId;
@@ -34,7 +34,7 @@ public class User{
     public User(){}
 
     public User(Long userId, String userTgname, String name,
-                String surname, String phoneNumber, String eMail, String role, String chatId) {
+                String surname, String phoneNumber, String eMail, Long role, String chatId) {
         this.userId = userId;
         this.userTgname = userTgname;
         this.name = name;
@@ -96,11 +96,11 @@ public class User{
         this.eMail = eMail;
     }
 
-    public String getRole() {
+    public Long getRole() {
         return role;
     }
 
-    public void setRole(String role) {
+    public void setRole(Long role) {
         this.role = role;
     }
 
