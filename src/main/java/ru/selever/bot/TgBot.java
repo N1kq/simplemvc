@@ -27,8 +27,19 @@ public class TgBot extends TelegramLongPollingBot {
         var msg = update.getMessage();
         var user = msg.getFrom();
         var id = user.getId();
+        sendText(id, "Тут информация о боте");
+        switch(msg.getText()){
+            case "/register":
 
-        logger.info(user.getId() + " wrote " + msg.getText());
+                break;
+            case "/constacts": //Вывод контактов
+
+                break;
+            default:
+                sendText(id, "Выберите команду из списка:");
+                sendText(id,"/help");
+                break;
+        }
         sendText(id, msg.getText());
     }
 
