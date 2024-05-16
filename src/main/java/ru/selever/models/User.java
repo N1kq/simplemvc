@@ -34,7 +34,7 @@ public class User{
     @Column(name = "chat_id")
     private String chatId;
 
-    @Column(name = "user_tg_id")
+    @Column(name = "user_tg_id", unique = true)
     private Long userTgId;
 
     @Column(name = "recdate")
