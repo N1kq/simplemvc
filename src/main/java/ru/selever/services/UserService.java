@@ -1,5 +1,6 @@
 package ru.selever.services;
 
+import jakarta.persistence.NonUniqueResultException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,8 @@ public class UserService {
     }
     public void createUser(Update update){
         User guest = new User();
+
+        guest.setUserTgId(update.getMessage().getFrom().getId());
         guest.setUserTgname(update.getMessage().getFrom().getUserName());
         if(userRepository.findById(1L).isPresent()){
             guest.setRole(2L);
@@ -37,9 +40,12 @@ public class UserService {
         guest.setSurname(null);
         guest.setRecdate(ts);
         guest.setEditdate(ts);
-        guest.setUserTgId(update.getMessage().getFrom().getId());
-        userRepository.save(guest);
-
+        try {
+            userRepository.save(guest);
+        }catch (Exception e){
+            logger.info("Такой гость уже есть в бд. Гость не сохранён");
+            return;
+        }
         logger.debug("Пользователь сохранён");
     }
 }
