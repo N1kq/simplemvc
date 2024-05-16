@@ -2,12 +2,14 @@ package ru.selever.models;
 
 import jakarta.persistence.*;
 
-import java.sql.Date;
+import java.sql.Time;
+import java.sql.Timestamp;
+
 @Entity
 @Table(name = "data")
 public class Data {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "message_id")
     private Long messageId;
 
@@ -15,10 +17,10 @@ public class Data {
     private String message;
 
     @Column(name = "recdate")
-    private Date recdate;
+    private Timestamp recdate;
 
     @Column(name = "editdate")
-    private Date editdate;
+    private Timestamp editdate;
 
     @Column(name = "name")
     private String name;
@@ -32,7 +34,7 @@ public class Data {
     public Data() {
     }
 
-    public Data(Long messageId, String message, Date recdate, Date editdate, String name, String phoneNumber, String eMail) {
+    public Data(Long messageId, String message, Timestamp recdate, Timestamp editdate, String name, String phoneNumber, String eMail) {
         this.messageId = messageId;
         this.message = message;
         this.recdate = recdate;
@@ -58,19 +60,19 @@ public class Data {
         this.message = message;
     }
 
-    public Date getRecdate() {
+    public Timestamp getRecdate() {
         return recdate;
     }
 
-    public void setRecdate(Date recdate) {
+    public void setRecdate(Timestamp recdate) {
         this.recdate = recdate;
     }
 
-    public Date getEditdate() {
+    public Timestamp getEditdate() {
         return editdate;
     }
 
-    public void setEditdate(Date editdate) {
+    public void setEditdate(Timestamp editdate) {
         this.editdate = editdate;
     }
 

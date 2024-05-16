@@ -2,11 +2,14 @@ package ru.selever.models;
 
 import jakarta.persistence.*;
 
+import java.sql.Timestamp;
+
 @Entity
 @Table(name = "user_data")
 public class User{
+
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
     private Long userId;
 
@@ -31,10 +34,19 @@ public class User{
     @Column(name = "chat_id")
     private String chatId;
 
+    @Column(name = "user_tg_id")
+    private Long userTgId;
+
+    @Column(name = "recdate")
+    private Timestamp recdate;
+
+    @Column(name = "editdate")
+    private Timestamp editdate;
+
     public User(){}
 
-    public User(Long userId, String userTgname, String name,
-                String surname, String phoneNumber, String eMail, Long role, String chatId) {
+    public User(Long userId, String userTgname, String name, String surname, String phoneNumber, String eMail,
+                Long role, String chatId, Long userTgId, Timestamp recdate, Timestamp editdate) {
         this.userId = userId;
         this.userTgname = userTgname;
         this.name = name;
@@ -43,9 +55,12 @@ public class User{
         this.eMail = eMail;
         this.role = role;
         this.chatId = chatId;
+        this.userTgId = userTgId;
+        this.recdate = recdate;
+        this.editdate = editdate;
     }
 
-    //Getters and Setters
+//Getters and Setters
 
 
     public Long getUserId() {
@@ -110,5 +125,29 @@ public class User{
 
     public void setChatId(String chatId) {
         this.chatId = chatId;
+    }
+
+    public Timestamp getRecdate() {
+        return recdate;
+    }
+
+    public void setRecdate(Timestamp recdate) {
+        this.recdate = recdate;
+    }
+
+    public Timestamp getEditdate() {
+        return editdate;
+    }
+
+    public void setEditdate(Timestamp editdate) {
+        this.editdate = editdate;
+    }
+
+    public Long getUserTgId() {
+        return userTgId;
+    }
+
+    public void setUserTgId(Long userTgId) {
+        this.userTgId = userTgId;
     }
 }
