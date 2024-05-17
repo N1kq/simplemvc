@@ -9,6 +9,7 @@ import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+import ru.selever.services.MessageService;
 import ru.selever.services.UserService;
 
 @Component
@@ -22,6 +23,8 @@ public class TgBot extends TelegramLongPollingBot {
     Logger logger = LoggerFactory.getLogger(TgBot.class);
     @Autowired
     UserService userService;
+    @Autowired
+    MessageService messageService;
     @Override
     public String getBotUsername(){
         return botname;
@@ -38,7 +41,7 @@ public class TgBot extends TelegramLongPollingBot {
             case "/register":
 
                 break;
-            case "/constacts": //Вывод контактов
+            case "/contacts": //Вывод контактов
 
                 break;
             default:
@@ -46,6 +49,7 @@ public class TgBot extends TelegramLongPollingBot {
                 sendText(id,"/help");
                 break;
         }
+        messageService.createMessage(update);
         logger.info("Обновление обработано успешно");
     }
 

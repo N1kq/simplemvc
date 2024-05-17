@@ -52,7 +52,6 @@ public class MessageController {
     @PutMapping("/{id}")
     public ResponseEntity updateMessage(@PathVariable Long messageId, @RequestBody Message message){
         logger.debug("Пришел Put-запрос на изменениие сообщения");
-        logger.info("Пришел Put-запрос на изменениие сообщения");
         Message currentMessage = messageRepository.findById(messageId).orElseThrow(RuntimeException::new);
         currentMessage.setMessage(message.getMessage());
         currentMessage.setEditdate(message.getEditdate());

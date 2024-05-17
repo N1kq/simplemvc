@@ -26,18 +26,18 @@ public class Message {
     @Column(name = "editdate")
     private Timestamp editdate;
 
-    @Column(name = "sender_tg_id")
-    private Long senderTgId;
+    @Column(name = "sender_chat_id")
+    private Long senderChatId;
 
     public Message() {}
 
-    public Message(Long messageId, String message, Long senderId, Timestamp recdate, Timestamp editdate, Long senderTgId) {
+    public Message(Long messageId, String message, Long senderId, Timestamp recdate, Timestamp editdate, Long senderChatId) {
         this.messageId = messageId;
         this.message = message;
         this.senderId = senderId;
         this.recdate = recdate;
         this.editdate = editdate;
-        this.senderTgId = senderTgId;
+        this.senderChatId = senderChatId;
     }
 
     public Long getMessageId() {
@@ -80,11 +80,11 @@ public class Message {
         this.editdate = editdate;
     }
 
-    public Long getSenderTgId() {
-        return senderTgId;
+    public Long getSenderChatId() {
+        return senderChatId;
     }
 
-    public void setSenderTgId(Long senderTgId) {
-        this.senderTgId = senderTgId;
+    public void setSenderChatId(Long senderChatId) {
+        this.senderChatId = senderChatId;
     }
 }
