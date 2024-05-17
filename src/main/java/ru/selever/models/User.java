@@ -8,6 +8,7 @@ import java.sql.Timestamp;
 @Table(name = "user_data")
 public class User{
 
+    public Dialogs status;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
@@ -32,7 +33,7 @@ public class User{
     private Long role;
 
     @Column(name = "chat_id")
-    private String chatId;
+    private Long chatId;
 
     @Column(name = "user_tg_id", unique = true)
     private Long userTgId;
@@ -43,10 +44,11 @@ public class User{
     @Column(name = "editdate")
     private Timestamp editdate;
 
+
     public User(){}
 
     public User(Long userId, String userTgname, String name, String surname, String phoneNumber, String eMail,
-                Long role, String chatId, Long userTgId, Timestamp recdate, Timestamp editdate) {
+                Long role, Long chatId, Long userTgId, Timestamp recdate, Timestamp editdate) {
         this.userId = userId;
         this.userTgname = userTgname;
         this.name = name;
@@ -119,11 +121,11 @@ public class User{
         this.role = role;
     }
 
-    public String getChatId() {
+    public Long getChatId() {
         return chatId;
     }
 
-    public void setChatId(String chatId) {
+    public void setChatId(Long chatId) {
         this.chatId = chatId;
     }
 

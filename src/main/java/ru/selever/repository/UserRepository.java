@@ -5,4 +5,6 @@ import ru.selever.models.User;
 
 
 public interface UserRepository extends JpaRepository<User,Long> {
+
+    User findByUserTgId(Long UserTgId);
 }
