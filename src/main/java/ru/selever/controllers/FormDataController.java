@@ -5,8 +5,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.selever.models.Data;
-import ru.selever.repository.DataRepository;
+import ru.selever.models.FormData;
+import ru.selever.repository.FormDataRepository;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -17,18 +17,18 @@ public class FormDataController {
     private static final Logger logger = LoggerFactory.getLogger(FormDataController.class);
 
     @Autowired
-    private final DataRepository dataRepository;
+    private final FormDataRepository formDataRepository;
 
     @Autowired
-    public FormDataController(DataRepository dataRepository) {
-        this.dataRepository = dataRepository;
+    public FormDataController(FormDataRepository formDataRepository) {
+        this.formDataRepository = formDataRepository;
     }
 
     //POST data
     @PostMapping
-    public ResponseEntity createData(@RequestBody Data data) throws URISyntaxException{
+    public ResponseEntity createData(@RequestBody FormData formData) throws URISyntaxException{
         logger.debug("Пришел Post-запрос на создание записи");
-        Data savedData = dataRepository.save(data);
-        return ResponseEntity.created(new URI("/data/"+ savedData.getMessageId())).body(savedData);
+        FormData savedFormData = formDataRepository.save(formData);
+        return ResponseEntity.created(new URI("/data/"+ savedFormData.getMessageId())).body(savedFormData);
     }
 }
