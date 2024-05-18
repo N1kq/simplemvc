@@ -13,6 +13,7 @@ import ru.selever.repository.UserRepository;
 
 import java.lang.reflect.Method;
 import java.sql.Timestamp;
+import java.util.List;
 
 @Service
 public class UserService {
@@ -53,53 +54,12 @@ public class UserService {
 
     }
 
-
-    //Это самое плохое решение, которое можно придумать, но самое быстрое
-    //sendText тут недоступен, конечно можно всё запихнуть в одну функцию, но это не сработало
-    //TODO: Если будеть нормальная идея, то поменять
-
-//    public void registerUserName(Update update){
-//        String msg = update.getMessage().getText();
-//        User user = userRepository.findByUserTgId(update.getMessage().getFrom().getId());
-//        user.setEditdate(ts);
-//        if(user.getName()==null){
-//            user.setName(msg);
-//            userRepository.save(user);
-//        }
-//    }
-//    public void registerUserSurname(Update update){
-//        String msg = update.getMessage().getText();
-//        User user = userRepository.findByUserTgId(update.getMessage().getFrom().getId());
-//        user.setEditdate(ts);
-//        if(user.getSurname()==null){
-//            user.setSurname(msg);
-//            userRepository.save(user);
-//        }
-//    }
-//    public void registerUserPhone(Update update){
-//        String msg = update.getMessage().getText();
-//        User user = userRepository.findByUserTgId(update.getMessage().getFrom().getId());
-//        user.setEditdate(ts);
-//        if(user.getPhoneNumber()==null){
-//            user.setPhoneNumber(msg);
-//            userRepository.save(user);
-//        }
-//    }
-//    public void registerUserEmail(Update update){
-//        String msg = update.getMessage().getText();
-//        User user = userRepository.findByUserTgId(update.getMessage().getFrom().getId());
-//        user.setEditdate(ts);
-//        if(user.geteMail()==null){
-//            user.seteMail(msg);
-//            userRepository.save(user);
-//        }
-//    }
-
-
     public void registerUser(User user){
         userRepository.save(user);
     }
     public User getByTgId(Long TgId){
         return userRepository.findByUserTgId(TgId);
     }
+
+    public List<User> getByRoleId(Long roleId){return userRepository.findByRole(roleId);}
 }

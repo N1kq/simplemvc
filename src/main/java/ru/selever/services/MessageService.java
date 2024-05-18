@@ -22,6 +22,7 @@ public class MessageService {
     private final MessageRepository messageRepository;
     @Autowired
     private final UserRepository userRepository;
+
     public MessageService(MessageRepository messageRepository, UserRepository userRepository){this.messageRepository=messageRepository;
         this.userRepository = userRepository;
     }
@@ -35,5 +36,9 @@ public class MessageService {
         m.setSenderChatId(update.getMessage().getChatId());
         messageRepository.save(m);
         logger.info("Создана запись в таблице message_data");
+    }
+
+    public Message getByMessageId(Long messageId){
+        return messageRepository.findByMessageId(messageId);
     }
 }

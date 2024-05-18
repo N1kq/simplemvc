@@ -8,7 +8,7 @@ import java.sql.Timestamp;
 @Table(name = "user_data")
 public class User{
 
-    public Dialogs status;
+    public Dialog status;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")

@@ -10,15 +10,15 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
-import ru.selever.models.Dialogs;
-
-import ru.selever.models.User;
+import ru.selever.models.*;
 import ru.selever.services.MessageService;
+import ru.selever.services.RoleService;
 import ru.selever.services.UserService;
 
 import java.sql.Timestamp;
+import java.util.List;
 
-import static ru.selever.models.Dialogs.REGISTER;
+import static ru.selever.models.Dialog.REGISTER;
 
 
 @Component
@@ -30,12 +30,19 @@ public class TgBot extends TelegramLongPollingBot {
         super(botToken);
     }
     Timestamp ts = new Timestamp(System.currentTimeMillis());
+    public Command command;
     User user;
+    Role role;
+    String rolename;
+    Message message;
+    Long messageId;
     Logger logger = LoggerFactory.getLogger(TgBot.class);
     @Autowired
     UserService userService;
     @Autowired
     MessageService messageService;
+    @Autowired
+    RoleService roleService;
     @Override
     public String getBotUsername(){
         return botname;
@@ -46,29 +53,32 @@ public class TgBot extends TelegramLongPollingBot {
         var msg = update.getMessage();
         //var user = msg.getFrom();
         var id = msg.getFrom().getId();
-
         switch(msg.getText()){
             case "/start":
                 userService.createUser(update);
-                user.status=null;
                 break;
-            case "/register":
+            case "/register": //СДЕЛАНО ПОД КОПИРКУ ИЗ ИНТЕРНЕТА, TODO: ПЕРЕДЕЛАТЬ ПО КРАСИВОМУ
                 user = userService.getByTgId(update.getMessage().getFrom().getId());
                 user.status= REGISTER;
-                sendText(user.getUserTgId(),"Пожалуйста, укажите своё имя:");
-                process(update, user);
+                command = Command.REGISTER;
+                break;
+            case "/mailing":
+                command = Command.MAILING;
                 break;
             case "/contacts":
+                break;
+        }
 
-                break;
-        }
-        switch(user.status){
-            case null:
-                break;
-            case REGISTER:
-                process(update,user);
-                break;
-        }
+            switch (command) {
+                case null:
+                    break;
+                case REGISTER:
+                    processUser(update, user);
+                    break;
+                case MAILING:
+                    processMailing(update);
+                    break;
+            }
         messageService.createMessage(update);
         logger.info("Обновление обработано успешно");
     }
@@ -85,7 +95,7 @@ public class TgBot extends TelegramLongPollingBot {
         }
     }
 
-    public void process(Update update, User user){
+    public void processUser(Update update, User user){
 
         if(user.status == null){
             return;
@@ -95,8 +105,10 @@ public class TgBot extends TelegramLongPollingBot {
             //Добавить диалоги сюда, если нужно
         }
     }
+
     private void processRegister(User user, String msg){
         if(msg.equals("/register")){
+            sendText(user.getUserTgId(),"Пожалуйста, укажите своё имя:");
             return;
         }
         if(user.getName()==null){
@@ -121,5 +133,34 @@ public class TgBot extends TelegramLongPollingBot {
         user.setEditdate(ts);
         userService.registerUser(user);
         sendText(user.getUserTgId(),"Регистрация завершена успешно");
+    }
+
+    public void processMailing(Update update){
+        if(update.getMessage().getText().equals("/mailing")){
+            sendText(update.getMessage().getFrom().getId(),"Пожалуйста, укажите пользователем с какой" +
+                    " ролью вы хотите переслать сообщение:");
+            return;
+        }
+        if(rolename == null) {
+            rolename = update.getMessage().getText();
+            sendText(update.getMessage().getFrom().getId(),"Пожалуйста, укажите ID сообщения для отправки:");
+            return;
+        }
+        if(messageId == null){
+            messageId = Long.parseLong(update.getMessage().getText(),10);
+        }
+        message = messageService.getByMessageId(messageId);
+        message.status= MessageStatus.MAILING;
+        role = roleService.getByName(rolename);
+        List<User> userList = userService.getByRoleId(role.getRoleId());
+
+        //РАССЫЛКА
+        for(int i = 0; i < userList.size(); i++){
+            sendText(userList.get(i).getUserTgId(),message.getMessage());
+        }
+        rolename = null;
+        messageId = null;
+        message = null;
+        role = null;
     }
 }
