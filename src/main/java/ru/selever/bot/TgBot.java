@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.MailException;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -11,6 +12,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import ru.selever.models.*;
+import ru.selever.services.EmailService;
 import ru.selever.services.MessageService;
 import ru.selever.services.RoleService;
 import ru.selever.services.UserService;
@@ -38,6 +40,8 @@ public class TgBot extends TelegramLongPollingBot {
     Long messageId;
     Logger logger = LoggerFactory.getLogger(TgBot.class);
     @Autowired
+    EmailService emailService;
+    @Autowired
     UserService userService;
     @Autowired
     MessageService messageService;
@@ -57,7 +61,7 @@ public class TgBot extends TelegramLongPollingBot {
             case "/start":
                 userService.createUser(update);
                 break;
-            case "/register": //СДЕЛАНО ПОД КОПИРКУ ИЗ ИНТЕРНЕТА, TODO: ПЕРЕДЕЛАТЬ ПО КРАСИВОМУ
+            case "/register": //TODO: ПЕРЕДЕЛАТЬ ПО КРАСИВОМУ
                 user = userService.getByTgId(update.getMessage().getFrom().getId());
                 user.status= REGISTER;
                 command = Command.REGISTER;
@@ -73,7 +77,7 @@ public class TgBot extends TelegramLongPollingBot {
                 case null:
                     break;
                 case REGISTER:
-                    processUser(update, user);
+                    processRegister(user, msg.getText());
                     break;
                 case MAILING:
                     processMailing(update);
@@ -81,6 +85,15 @@ public class TgBot extends TelegramLongPollingBot {
             }
         messageService.createMessage(update);
         logger.info("Обновление обработано успешно");
+
+        try {
+            //выбрать e-mail
+            emailService.sendSimpleEmail("e-mail вставить сюда", "subject", "body");
+            logger.info("Message sent successfully");
+
+        } catch (MailException mailException){
+            logger.error("Message send error");
+        }
     }
 
     public void sendText(Long who, String what){
@@ -95,16 +108,7 @@ public class TgBot extends TelegramLongPollingBot {
         }
     }
 
-    public void processUser(Update update, User user){
 
-        if(user.status == null){
-            return;
-        }
-        switch (user.status) {
-            case REGISTER -> processRegister(user, update.getMessage().getText());
-            //Добавить диалоги сюда, если нужно
-        }
-    }
 
     private void processRegister(User user, String msg){
         if(msg.equals("/register")){
@@ -131,8 +135,10 @@ public class TgBot extends TelegramLongPollingBot {
         }
         user.status=null;
         user.setEditdate(ts);
+        user.setRole(3L);
         userService.registerUser(user);
         sendText(user.getUserTgId(),"Регистрация завершена успешно");
+        command = null;
     }
 
     public void processMailing(Update update){
@@ -162,5 +168,6 @@ public class TgBot extends TelegramLongPollingBot {
         messageId = null;
         message = null;
         role = null;
+        command = null;
     }
 }
