@@ -14,6 +14,7 @@ import ru.selever.repository.UserRepository;
 import java.lang.reflect.Method;
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Random;
 
 @Service
 public class UserService {
@@ -26,6 +27,7 @@ public class UserService {
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
+    private String characters = "abcdefghijklmnopqrstvwxyz1234567890";
     public void createUser(Update update){
         User guest = new User();
 
@@ -44,6 +46,8 @@ public class UserService {
         guest.setSurname(null);
         guest.setRecdate(ts);
         guest.setEditdate(ts);
+        guest.setVerified(false);
+        guest.setVerCode(null);
         try {
             userRepository.save(guest);
             logger.debug("Пользователь сохранён");
@@ -61,5 +65,27 @@ public class UserService {
         return userRepository.findByUserTgId(TgId);
     }
 
+    public User getByVerCode(String code){return userRepository.findByVerCode(code);}
+
     public List<User> getByRoleId(Long roleId){return userRepository.findByRole(roleId);}
+
+
+    public void getVerCode(User user){
+        Random rng = new Random();
+        user.setVerCode(generateString(rng,characters,64));
+        userRepository.save(user);
+    }
+    public void verifyUser(User user){
+        user.setVerified(true);
+        userRepository.save(user);
+    }
+    public static String generateString(Random rng, String characters, int length)
+    {
+        char[] text = new char[length];
+        for (int i = 0; i < length; i++)
+        {
+            text[i] = characters.charAt(rng.nextInt(characters.length()));
+        }
+        return new String(text);
+    }
 }

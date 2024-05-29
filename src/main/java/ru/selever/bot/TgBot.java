@@ -63,37 +63,37 @@ public class TgBot extends TelegramLongPollingBot {
                 break;
             case "/register": //TODO: ПЕРЕДЕЛАТЬ ПО КРАСИВОМУ
                 user = userService.getByTgId(update.getMessage().getFrom().getId());
-                user.status= REGISTER;
+                user.status= REGISTER; //TODO: поменять на string и добавить в бд
                 command = Command.REGISTER;
                 break;
             case "/mailing":
                 command = Command.MAILING;
                 break;
+            case "/verify":
+                if(user.getVerified()!=true) {
+                    command = Command.VERIFY;
+                } else {
+                    sendText(id,"Вы уже потверждены пользователем системы.");
+                }
             case "/contacts":
                 break;
         }
 
-            switch (command) {
-                case null:
-                    break;
-                case REGISTER:
-                    processRegister(user, msg.getText());
-                    break;
-                case MAILING:
-                    processMailing(update);
-                    break;
-            }
+        switch (command) {
+            case null:
+                break;
+            case REGISTER:
+                processRegister(user, msg.getText());
+                break;
+            case MAILING:
+                processMailing(update);
+                break;
+            case VERIFY:
+                processVerify(user);
+                break;
+        }
         messageService.createMessage(update);
         logger.info("Обновление обработано успешно");
-
-        try {
-            //выбрать e-mail
-            emailService.sendSimpleEmail("e-mail вставить сюда", "subject", "body");
-            logger.info("Message sent successfully");
-
-        } catch (MailException mailException){
-            logger.error("Message send error");
-        }
     }
 
     public void sendText(Long who, String what){
@@ -137,7 +137,7 @@ public class TgBot extends TelegramLongPollingBot {
         user.setEditdate(ts);
         user.setRole(3L);
         userService.registerUser(user);
-        sendText(user.getUserTgId(),"Регистрация завершена успешно");
+        sendText(user.getUserTgId(),"Регистрация завершена успешно. Пройдите верификацию с помощью командыы /verify.");
         command = null;
     }
 
@@ -169,5 +169,11 @@ public class TgBot extends TelegramLongPollingBot {
         message = null;
         role = null;
         command = null;
+    }
+
+    public void processVerify(User user){
+       userService.getVerCode(user);
+       emailService.sendVerificationEmail(user, "localhost:8080");
+       command = null;
     }
 }

@@ -43,12 +43,18 @@ public class User{
 
     @Column(name = "editdate")
     private Timestamp editdate;
-
+    @Column(name = "verified")
+    private boolean isVerified;
+    @Column(name = "verification_code")
+    private String verCode;
 
     public User(){}
 
-    public User(Long userId, String userTgname, String name, String surname, String phoneNumber, String eMail,
-                Long role, Long chatId, Long userTgId, Timestamp recdate, Timestamp editdate) {
+    public User(Dialog status, Long userId, String userTgname, String name,
+                String surname, String phoneNumber, String eMail, Long role, Long chatId,
+                Long userTgId, Timestamp recdate,
+                Timestamp editdate, boolean isVerified, String verCode) {
+        this.status = status;
         this.userId = userId;
         this.userTgname = userTgname;
         this.name = name;
@@ -60,6 +66,8 @@ public class User{
         this.userTgId = userTgId;
         this.recdate = recdate;
         this.editdate = editdate;
+        this.isVerified = isVerified;
+        this.verCode = verCode;
     }
 
 //Getters and Setters
@@ -151,5 +159,21 @@ public class User{
 
     public void setUserTgId(Long userTgId) {
         this.userTgId = userTgId;
+    }
+
+    public boolean getVerified() {
+        return isVerified;
+    }
+
+    public void setVerified(boolean verified) {
+        isVerified = verified;
+    }
+
+    public String getVerCode() {
+        return verCode;
+    }
+
+    public void setVerCode(String verCode) {
+        this.verCode = verCode;
     }
 }
