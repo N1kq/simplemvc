@@ -5,13 +5,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ru.selever.models.User;
 import ru.selever.repository.UserRepository;
 
-import java.lang.reflect.Method;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.Random;
@@ -59,7 +56,7 @@ public class UserService {
 
     }
 
-    public void registerUser(User user){
+    public void saveUser(User user){
         userRepository.save(user);
     }
     public User getByTgId(Long TgId){

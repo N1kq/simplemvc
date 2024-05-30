@@ -25,4 +25,12 @@ public class RoleService {
     public Role getByName(String name){
         return roleRepository.findByName(name);
     }
+
+    public void saveRole(Role role) {
+        roleRepository.save(role);
+    }
+
+    public void deleteRole(Role byName) {
+        roleRepository.delete(byName);
+    }
 }

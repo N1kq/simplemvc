@@ -14,12 +14,16 @@ public class Role {
     @Column(name = "name")
     private String name;
 
+    @Column(name = "description")
+    private String desc;
+
     public Role() {
     }
 
-    public Role(Long roleId, String name) {
+    public Role(Long roleId, String name, String desc) {
         this.roleId = roleId;
         this.name = name;
+        this.desc = desc;
     }
 
     public Long getRoleId() {
@@ -36,5 +40,13 @@ public class Role {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getDesc() {
+        return desc;
+    }
+
+    public void setDesc(String desc) {
+        this.desc = desc;
     }
 }

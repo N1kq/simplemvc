@@ -59,17 +59,29 @@ public class TgBot extends TelegramLongPollingBot {
                 break;
             case "/register": //TODO: ПЕРЕДЕЛАТЬ ПО КРАСИВОМУ
                 user.setStatus("REGISTER"); //TODO: поменять на string и добавить в бд
+                userService.saveUser(user);
                 break;
             case "/mailing":
                 user.setStatus("MAILING");
+                userService.saveUser(user);
                 break;
             case "/verify":
                 if(user.getVerified()!=true) {
                     user.setStatus("VERIFY");
+                    userService.saveUser(user);
                 } else {
                     sendText(id,"Вы уже потверждены пользователем системы.");
                 }
             case "/contacts":
+                sendText(id,"С нами можно связаться ...");
+                break;
+            case "/role_create":
+                user.setStatus("ROLE_CREATE");
+                userService.saveUser(user);
+                break;
+            case "/role_delete":
+                user.setStatus("ROLE_DELETE");
+                userService.saveUser(user);
                 break;
         }
 
@@ -85,6 +97,8 @@ public class TgBot extends TelegramLongPollingBot {
             case "VERIFY":
                 processVerify(user);
                 break;
+            case "ROLE_CREATE":
+                proccessRoleCreate(msg.getText());
             default:
                 throw new IllegalStateException("Unexpected value: " + user.getStatus());
         }
@@ -132,7 +146,7 @@ public class TgBot extends TelegramLongPollingBot {
         user.setStatus(null);
         user.setEditdate(ts);
         user.setRole(3L);
-        userService.registerUser(user);
+        userService.saveUser(user);
         sendText(user.getUserTgId(),"Регистрация завершена успешно. Пройдите верификацию с помощью командыы /verify.");
     }
 
@@ -164,12 +178,55 @@ public class TgBot extends TelegramLongPollingBot {
         message = null;
         role = null;
         user.setStatus(null);
-
+        userService.saveUser(user);
     }
 
     public void processVerify(User user){
        userService.getVerCode(user);
        emailService.sendVerificationEmail(user, "localhost:8080");
        user.setStatus(null);
+       userService.saveUser(user);
+    }
+
+//Методы для работы с ролями
+    public void proccessRoleCreate(String msg){
+        if(msg.equals("/role_create")){
+            sendText(user.getUserTgId(),"Пожалуйста, укажите название роли:");
+            return;
+        }
+        Role role1 = null;
+        if(role1.getName()==null){
+            role1.setName(msg);
+            sendText(user.getUserTgId(),"Пожалуйста, укажите описание роли:");
+            return;
+        }
+        if(role1.getDesc()==null){
+            role1.setDesc(msg);
+        }
+        user.setStatus(null);
+        userService.saveUser(user);
+        roleService.saveRole(role1);
+        sendText(user.getUserTgId(),"Создана новая роль "+ role1.getName());
+    }
+
+    public void processRoleDelete(String msg){
+        if(msg.equals("/role_delete")){
+            sendText(user.getUserTgId(),"Пожалуйста, укажите название роли, которую хотите удалить:");
+            return;
+        }
+        if (msg.contains("Админ")){
+            sendText(user.getUserTgId(), "Нельзя удалить роль.");
+            user.setStatus(null);
+            userService.saveUser(user);
+            return;
+        }
+        if(roleService.getByName(msg)!=null){
+            roleService.deleteRole(roleService.getByName(msg));
+            sendText(user.getUserTgId(),"Роль была удалена.");
+        }else {
+            sendText(user.getUserTgId(),"Роль не найдена.");
+        }
+        user.setStatus(null);
+        userService.saveUser(user);
     }
 }
