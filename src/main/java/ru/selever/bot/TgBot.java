@@ -83,6 +83,10 @@ public class TgBot extends TelegramLongPollingBot {
                 user.setStatus("ROLE_DELETE");
                 userService.saveUser(user);
                 break;
+            case "/role_update":
+                user.setStatus("ROLE_UPDATE");
+                userService.saveUser(user);
+                break;
         }
 
         switch (user.getStatus()) {
@@ -98,6 +102,10 @@ public class TgBot extends TelegramLongPollingBot {
                 processVerify(user);
                 break;
             case "ROLE_CREATE":
+                proccessRoleCreate(msg.getText());
+            case "ROLE_DELETE":
+                processRoleDelete(msg.getText());
+            case "ROLE_UPDATE":
                 proccessRoleCreate(msg.getText());
             default:
                 throw new IllegalStateException("Unexpected value: " + user.getStatus());
@@ -189,9 +197,14 @@ public class TgBot extends TelegramLongPollingBot {
     }
 
 //Методы для работы с ролями
+    //Этот метод служит также для role_update
     public void proccessRoleCreate(String msg){
         if(msg.equals("/role_create")){
             sendText(user.getUserTgId(),"Пожалуйста, укажите название роли:");
+            return;
+        }
+        if(msg.equals("/role_update")){
+            sendText(user.getUserTgId(),"Пожалуйста, укажите новое название роли:");
             return;
         }
         Role role1 = null;
