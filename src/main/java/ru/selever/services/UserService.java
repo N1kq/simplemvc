@@ -48,6 +48,7 @@ public class UserService {
         guest.setEditdate(ts);
         guest.setVerified(false);
         guest.setVerCode(null);
+        guest.setStatus(null);
         try {
             userRepository.save(guest);
             logger.debug("Пользователь сохранён");

@@ -8,7 +8,6 @@ import java.sql.Timestamp;
 @Table(name = "user_data")
 public class User{
 
-    public Dialog status;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
@@ -48,13 +47,14 @@ public class User{
     @Column(name = "verification_code")
     private String verCode;
 
+    @Column(name ="status")
+    private String status;
+
     public User(){}
 
-    public User(Dialog status, Long userId, String userTgname, String name,
-                String surname, String phoneNumber, String eMail, Long role, Long chatId,
-                Long userTgId, Timestamp recdate,
-                Timestamp editdate, boolean isVerified, String verCode) {
-        this.status = status;
+    public User(Long userId, String userTgname, String name, String surname,
+                String phoneNumber, String eMail, Long role, Long chatId, Long userTgId,
+                Timestamp recdate, Timestamp editdate, boolean isVerified, String verCode, String status) {
         this.userId = userId;
         this.userTgname = userTgname;
         this.name = name;
@@ -68,6 +68,7 @@ public class User{
         this.editdate = editdate;
         this.isVerified = isVerified;
         this.verCode = verCode;
+        this.status = status;
     }
 
 //Getters and Setters
@@ -175,5 +176,13 @@ public class User{
 
     public void setVerCode(String verCode) {
         this.verCode = verCode;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

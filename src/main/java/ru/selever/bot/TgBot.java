@@ -4,7 +4,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.MailException;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -20,8 +19,6 @@ import ru.selever.services.UserService;
 import java.sql.Timestamp;
 import java.util.List;
 
-import static ru.selever.models.Dialog.REGISTER;
-
 
 @Component
 public class TgBot extends TelegramLongPollingBot {
@@ -32,7 +29,6 @@ public class TgBot extends TelegramLongPollingBot {
         super(botToken);
     }
     Timestamp ts = new Timestamp(System.currentTimeMillis());
-    public Command command;
     User user;
     Role role;
     String rolename;
@@ -55,23 +51,21 @@ public class TgBot extends TelegramLongPollingBot {
     @Override
     public void onUpdateReceived(Update update){
         var msg = update.getMessage();
-        //var user = msg.getFrom();
         var id = msg.getFrom().getId();
+        user = userService.getByTgId(update.getMessage().getFrom().getId());
         switch(msg.getText()){
             case "/start":
                 userService.createUser(update);
                 break;
             case "/register": //TODO: ПЕРЕДЕЛАТЬ ПО КРАСИВОМУ
-                user = userService.getByTgId(update.getMessage().getFrom().getId());
-                user.status= REGISTER; //TODO: поменять на string и добавить в бд
-                command = Command.REGISTER;
+                user.setStatus("REGISTER"); //TODO: поменять на string и добавить в бд
                 break;
             case "/mailing":
-                command = Command.MAILING;
+                user.setStatus("MAILING");
                 break;
             case "/verify":
                 if(user.getVerified()!=true) {
-                    command = Command.VERIFY;
+                    user.setStatus("VERIFY");
                 } else {
                     sendText(id,"Вы уже потверждены пользователем системы.");
                 }
@@ -79,18 +73,20 @@ public class TgBot extends TelegramLongPollingBot {
                 break;
         }
 
-        switch (command) {
+        switch (user.getStatus()) {
             case null:
                 break;
-            case REGISTER:
+            case "REGISTER":
                 processRegister(user, msg.getText());
                 break;
-            case MAILING:
-                processMailing(update);
+            case "MAILING":
+                processMailing(update, user);
                 break;
-            case VERIFY:
+            case "VERIFY":
                 processVerify(user);
                 break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + user.getStatus());
         }
         messageService.createMessage(update);
         logger.info("Обновление обработано успешно");
@@ -133,15 +129,14 @@ public class TgBot extends TelegramLongPollingBot {
         if(user.geteMail()==null){
             user.seteMail(msg);
         }
-        user.status=null;
+        user.setStatus(null);
         user.setEditdate(ts);
         user.setRole(3L);
         userService.registerUser(user);
         sendText(user.getUserTgId(),"Регистрация завершена успешно. Пройдите верификацию с помощью командыы /verify.");
-        command = null;
     }
 
-    public void processMailing(Update update){
+    public void processMailing(Update update, User user){
         if(update.getMessage().getText().equals("/mailing")){
             sendText(update.getMessage().getFrom().getId(),"Пожалуйста, укажите пользователем с какой" +
                     " ролью вы хотите переслать сообщение:");
@@ -168,12 +163,13 @@ public class TgBot extends TelegramLongPollingBot {
         messageId = null;
         message = null;
         role = null;
-        command = null;
+        user.setStatus(null);
+
     }
 
     public void processVerify(User user){
        userService.getVerCode(user);
        emailService.sendVerificationEmail(user, "localhost:8080");
-       command = null;
+       user.setStatus(null);
     }
 }
