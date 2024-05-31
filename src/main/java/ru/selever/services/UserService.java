@@ -77,6 +77,7 @@ public class UserService {
         user.setVerified(true);
         userRepository.save(user);
     }
+
     public static String generateString(Random rng, String characters, int length)
     {
         char[] text = new char[length];

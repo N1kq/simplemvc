@@ -66,7 +66,7 @@ public class TgBot extends TelegramLongPollingBot {
                 userService.saveUser(user);
                 break;
             case "/verify":
-                if(user.getVerified()!=true) {
+                if(!user.getVerified()) {
                     user.setStatus("VERIFY");
                     userService.saveUser(user);
                 } else {
@@ -102,17 +102,21 @@ public class TgBot extends TelegramLongPollingBot {
                 processVerify(user);
                 break;
             case "ROLE_CREATE":
-                proccessRoleCreate(msg.getText());
+                processRoleCreate(msg.getText());
             case "ROLE_DELETE":
                 processRoleDelete(msg.getText());
             case "ROLE_UPDATE":
-                proccessRoleCreate(msg.getText());
+                processRoleUpdate(msg.getText());
+            case "ROLE_GIVE":
+                processRoleGive(user, msg.getText());
             default:
                 throw new IllegalStateException("Unexpected value: " + user.getStatus());
         }
         messageService.createMessage(update);
         logger.info("Обновление обработано успешно");
     }
+
+
 
     public void sendText(Long who, String what){
         SendMessage sm = SendMessage.builder()
@@ -178,8 +182,8 @@ public class TgBot extends TelegramLongPollingBot {
         List<User> userList = userService.getByRoleId(role.getRoleId());
 
         //РАССЫЛКА
-        for(int i = 0; i < userList.size(); i++){
-            sendText(userList.get(i).getUserTgId(),message.getMessage());
+        for (User value : userList) {
+            sendText(value.getUserTgId(), message.getMessage());
         }
         rolename = null;
         messageId = null;
@@ -197,17 +201,12 @@ public class TgBot extends TelegramLongPollingBot {
     }
 
 //Методы для работы с ролями
-    //Этот метод служит также для role_update
-    public void proccessRoleCreate(String msg){
+    private void processRoleCreate(String msg){
+        Role role1 = null;
         if(msg.equals("/role_create")){
             sendText(user.getUserTgId(),"Пожалуйста, укажите название роли:");
             return;
         }
-        if(msg.equals("/role_update")){
-            sendText(user.getUserTgId(),"Пожалуйста, укажите новое название роли:");
-            return;
-        }
-        Role role1 = null;
         if(role1.getName()==null){
             role1.setName(msg);
             sendText(user.getUserTgId(),"Пожалуйста, укажите описание роли:");
@@ -221,8 +220,34 @@ public class TgBot extends TelegramLongPollingBot {
         roleService.saveRole(role1);
         sendText(user.getUserTgId(),"Создана новая роль "+ role1.getName());
     }
-
-    public void processRoleDelete(String msg){
+    private void processRoleUpdate(String msg){
+        if(msg.equals("/role_update")){
+            sendText(user.getUserTgId(),"Пожалуйста, укажите роль, которую вы хотите изменить:");
+            return;
+        }
+        Role role = roleService.getByName(msg);
+        if(role == null){
+            sendText(user.getUserTgId(),"Такой роли не существует. Воспользуйтесь командой /role_create для создания новой роли");
+            user.setStatus(null);
+            userService.saveUser(user);
+            return;
+        }
+        role.setName(null);
+        role.setDesc(null);
+        if(role.getName()==null){
+            role.setName(msg);
+            sendText(user.getUserTgId(),"Пожалуйста, укажите описание роли:");
+            return;
+        }
+        if(role.getDesc()==null){
+            role.setDesc(msg);
+        }
+        user.setStatus(null);
+        userService.saveUser(user);
+        roleService.saveRole(role);
+        sendText(user.getUserTgId(),"Обновлена роль "+ role.getName());
+    }
+    private void processRoleDelete(String msg){
         if(msg.equals("/role_delete")){
             sendText(user.getUserTgId(),"Пожалуйста, укажите название роли, которую хотите удалить:");
             return;
@@ -241,5 +266,8 @@ public class TgBot extends TelegramLongPollingBot {
         }
         user.setStatus(null);
         userService.saveUser(user);
+    }
+    private void processRoleGive(User user, String text) {
+
     }
 }
