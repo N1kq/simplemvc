@@ -87,6 +87,10 @@ public class TgBot extends TelegramLongPollingBot {
                 user.setStatus("ROLE_UPDATE");
                 userService.saveUser(user);
                 break;
+            case "/role_give":
+                user.setStatus("ROLE_GIVE");
+                userService.saveUser(user);
+                break;
         }
 
         switch (user.getStatus()) {
@@ -108,7 +112,7 @@ public class TgBot extends TelegramLongPollingBot {
             case "ROLE_UPDATE":
                 processRoleUpdate(msg.getText());
             case "ROLE_GIVE":
-                processRoleGive(user, msg.getText());
+                processRoleGive(msg.getText());
             default:
                 throw new IllegalStateException("Unexpected value: " + user.getStatus());
         }
@@ -129,8 +133,6 @@ public class TgBot extends TelegramLongPollingBot {
             throw new RuntimeException(e);
         }
     }
-
-
 
     private void processRegister(User user, String msg){
         if(msg.equals("/register")){
@@ -267,7 +269,33 @@ public class TgBot extends TelegramLongPollingBot {
         user.setStatus(null);
         userService.saveUser(user);
     }
-    private void processRoleGive(User user, String text) {
-
+    private void processRoleGive(String msg) {
+        if(user.getRole()!= 1L){
+            sendText(user.getUserTgId(),"У вас нет доступа к этой команде.");
+            user.setStatus(null);
+            userService.saveUser(user);
+            return;
+        }
+        if(msg.equals("/role_give")) {
+            sendText(user.getUserTgId(),"Пожалуйста, укажите ID пользователя, которому хотите дать роль:");
+            return;
+        }
+        User user1 = userService.getUserById(msg);
+        Role role1 = null;
+        if(user1 == null){
+            sendText(user.getUserTgId(),"Такого пользователя не существует.");
+            user.setStatus(null);
+            userService.saveUser(user);
+            return;
+        }
+        if(user1.getRole()!=null) {
+            sendText(user.getUserTgId(), "Пожалуйста, укажите роль, которую хотите дать пользователю:");
+            user1.setRole(null);
+            return;
+        }
+        user1.setRole(Long.parseLong(msg));
+        user1.setStatus(null);
+        userService.saveUser(user1);
+        sendText(user.getUserTgId(),"Обновлена роль пользователя"+ user1.getUserId());
     }
 }

@@ -10,6 +10,6 @@ public interface UserRepository extends JpaRepository<User,Long> {
 
     User findByUserTgId(Long UserTgId);
     List<User> findByRole(Long roleId);
-
+    User findByUserId(Long id);
     User findByVerCode(String code);
 }

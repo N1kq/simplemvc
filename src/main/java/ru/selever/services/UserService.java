@@ -77,6 +77,10 @@ public class UserService {
         user.setVerified(true);
         userRepository.save(user);
     }
+    public User getUserById(String text){
+        Long id = Long.parseLong(text);
+        return userRepository.findByUserId(id);
+    }
 
     public static String generateString(Random rng, String characters, int length)
     {
